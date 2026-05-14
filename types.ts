@@ -20,3 +20,15 @@ export interface ILesson {
   durationMinutes: number;
   completed: boolean;
 }
+
+export interface ICreateCourseInput {
+  title: string;
+  description: string;
+  level: TCourseLevel;
+}
+
+export interface IAddLessonInput {
+  courseId: string;
+  title: string;
+  durationMinutes: number;
+}
