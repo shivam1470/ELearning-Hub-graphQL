@@ -1,6 +1,10 @@
-# GraphQL Sample Queries & Mutations
+# GraphQL Manual Testing Reference
 
-## 1. Hello Query
+---
+
+# 1. Basic Queries
+
+## Hello Query
 
 ```graphql
 query {
@@ -8,9 +12,12 @@ query {
 }
 ```
 
+Expected:
+- Returns greeting string
+
 ---
 
-## 2. Get All Courses
+## Get All Courses
 
 ```graphql
 query {
@@ -25,9 +32,12 @@ query {
 }
 ```
 
+Expected:
+- Returns all courses
+
 ---
 
-## 3. Get Course By ID
+## Get Single Course
 
 ```graphql
 query {
@@ -38,6 +48,23 @@ query {
     level
     published
     lessonCount
+  }
+}
+```
+
+Expected:
+- Returns course with id `1`
+
+---
+
+# 2. Nested Relation Queries
+
+## Course With Lessons
+
+```graphql
+query {
+  course(id: "1") {
+    title
     lessons {
       id
       title
@@ -48,129 +75,80 @@ query {
 }
 ```
 
+Expected:
+- Nested lessons list returned
+
 ---
 
-## 4. Get All Lessons
+## All Courses With Nested Lessons
 
 ```graphql
 query {
-  lessons {
-    id
-    courseId
+  courses {
     title
-    durationMinutes
-    completed
-  }
-}
-```
-
----
-
-## 5. Get Lesson By ID
-
-```graphql
-query {
-  lesson(id: "1") {
-    id
-    courseId
-    title
-    durationMinutes
-    completed
-  }
-}
-```
-
----
-
-# Mutations
-
-## 6. Create Course
-
-```graphql
-mutation {
-  createCourse(
-    input: {
-      title: "Advanced GraphQL"
-      description: "Deep dive into GraphQL"
-      level: "ADVANCED"
+    lessons {
+      title
+      completed
     }
-  ) {
-    id
+  }
+}
+```
+
+Expected:
+- Every course includes lesson list
+
+---
+
+# 3. Filter Queries
+
+## Filter By Level
+
+```graphql
+query {
+  courses(level: "BEGINNER") {
     title
-    description
     level
-    published
-    lessonCount
   }
 }
 ```
 
----
-
-## 7. Add Lesson
-
-```graphql
-mutation {
-  addLesson(
-    input: {
-      courseId: "1"
-      title: "GraphQL Resolvers"
-      durationMinutes: 45
-    }
-  ) {
-    id
-    title
-    durationMinutes
-    completed
-  }
-}
-```
+Expected:
+- Only beginner courses
 
 ---
 
-## 8. Mark Lesson Completed
+## Filter By Published
 
 ```graphql
-mutation {
-  markLessonCompleted(id: "1") {
-    id
-    title
-    completed
-  }
-}
-```
-
----
-
-## 9. Publish Course
-
-```graphql
-mutation {
-  publishCourse(id: "1", published: true) {
-    id
+query {
+  courses(published: true) {
     title
     published
   }
 }
 ```
 
+Expected:
+- Only published courses
+
 ---
 
-## 10. Unpublish Course
+## Filter By Search
 
 ```graphql
-mutation {
-  publishCourse(id: "1", published: false) {
-    id
+query {
+  courses(search: "graphql") {
     title
-    published
   }
 }
 ```
 
+Expected:
+- Matching title results only
+
 ---
 
-## 11. Search & Filter query
+## Combined Filters
 
 ```graphql
 query {
@@ -184,16 +162,247 @@ query {
 }
 ```
 
+Expected:
+- Only matching subset
+
 ---
 
-# Practice Flow
+# 4. Mutations
 
-Run in this order:
+## Create Course
 
-1. Create course
-2. Query all courses
-3. Add lesson
-4. Query course by id
-5. Mark lesson completed
-6. Publish course
-7. Query final course state
+```graphql
+mutation {
+  createCourse(
+    input: {
+      title: "Advanced GraphQL"
+      description: "Deep dive"
+      level: "ADVANCED"
+    }
+  ) {
+    id
+    title
+    published
+  }
+}
+```
+
+Expected:
+- New course created
+- published = false
+
+---
+
+## Add Lesson
+
+```graphql
+mutation {
+  addLesson(
+    input: {
+      courseId: "1"
+      title: "Resolvers"
+      durationMinutes: 45
+    }
+  ) {
+    id
+    title
+    completed
+  }
+}
+```
+
+Expected:
+- Lesson added
+- completed = false
+
+---
+
+## Mark Lesson Completed
+
+```graphql
+mutation {
+  markLessonCompleted(id: "1") {
+    id
+    completed
+  }
+}
+```
+
+Expected:
+- completed = true
+
+---
+
+## Publish Course
+
+```graphql
+mutation {
+  publishCourse(
+    id: "1"
+    published: true
+  ) {
+    id
+    published
+  }
+}
+```
+
+Expected:
+- published = true
+
+---
+
+# 5. Validation Failure Tests
+
+## Empty Course Title
+
+```graphql
+mutation {
+  createCourse(
+    input: {
+      title: ""
+      description: "Test"
+      level: "BEGINNER"
+    }
+  ) {
+    id
+  }
+}
+```
+
+Expected error:
+
+```json
+Course title cannot be empty
+```
+
+---
+
+## Empty Lesson Title
+
+```graphql
+mutation {
+  addLesson(
+    input: {
+      courseId: "1"
+      title: ""
+      durationMinutes: 30
+    }
+  ) {
+    id
+  }
+}
+```
+
+Expected error:
+
+```json
+Lesson title cannot be empty
+```
+
+---
+
+## Invalid Duration
+
+```graphql
+mutation {
+  addLesson(
+    input: {
+      courseId: "1"
+      title: "Bad lesson"
+      durationMinutes: 0
+    }
+  ) {
+    id
+  }
+}
+```
+
+Expected error:
+
+```json
+Lesson duration must be greater than 0
+```
+
+---
+
+## Invalid Course
+
+```graphql
+mutation {
+  addLesson(
+    input: {
+      courseId: "999"
+      title: "Test"
+      durationMinutes: 30
+    }
+  ) {
+    id
+  }
+}
+```
+
+Expected error:
+
+```json
+Course not found
+```
+
+---
+
+## Invalid Lesson
+
+```graphql
+mutation {
+  markLessonCompleted(id: "999") {
+    id
+  }
+}
+```
+
+Expected error:
+
+```json
+Lesson not found
+```
+
+---
+
+# 6. Manual Test Checklist
+
+## Queries
+
+- [ ] hello works
+- [ ] all courses query works
+- [ ] single course lookup works
+- [ ] nested lessons resolve
+- [ ] filters work individually
+- [ ] combined filters work
+
+---
+
+## Mutations
+
+- [ ] createCourse works
+- [ ] addLesson works
+- [ ] markLessonCompleted works
+- [ ] publishCourse works
+
+---
+
+## Validation
+
+- [ ] empty course title rejected
+- [ ] empty lesson title rejected
+- [ ] duration <= 0 rejected
+- [ ] invalid course rejected
+- [ ] invalid lesson rejected
+
+---
+
+## Final Verification
+
+- [ ] mock data updates correctly
+- [ ] lessonCount updates correctly
+- [ ] readable errors returned
+- [ ] nested relations stay correct
