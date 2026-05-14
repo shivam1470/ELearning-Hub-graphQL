@@ -1,7 +1,7 @@
-const express = require("express");
-const { graphqlHTTP } = require("express-graphql");
-const schema = require("./schema");
-const resolvers = require("./resolvers");
+import express from "express";
+import { graphqlHTTP } from "express-graphql";
+import schema from "./schema";
+import resolvers from "./resolvers";
 
 const app = express();
 

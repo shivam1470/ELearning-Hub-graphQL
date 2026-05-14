@@ -1,12 +1,12 @@
-const courses = require("./mock-db/courses");
-const lessons = require("./mock-db/lessons");
+import courses from "./mock-db/courses";
+import lessons from "./mock-db/lessons";
 
-module.exports = {
+export default {
   hello: () => {
     return "Hello Shivam Mishra!";
   },
 
-  course: ({id}) => {
+  course: ({id}: {id: string}) => {
     return courses.find(course => course.id == id);
   },
 
@@ -14,7 +14,7 @@ module.exports = {
    return courses;
   },
 
-  lesson: ({id}) => {
+  lesson: ({id}: {id: string}) => {
     return lessons.find(lesson => lesson.id == id);
   },
 

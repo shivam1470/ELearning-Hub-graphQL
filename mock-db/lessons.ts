@@ -1,4 +1,6 @@
-const lessons = [
+import { ILesson } from "../types";
+
+const lessons: ILesson[] = [
   {
     id: "101",
     courseId: "1",
@@ -50,4 +52,4 @@ const lessons = [
   },
 ];
 
-module.exports = lessons;
+export default lessons

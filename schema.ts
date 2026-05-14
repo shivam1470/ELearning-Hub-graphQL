@@ -1,6 +1,6 @@
 const { buildSchema } = require("graphql");
 
-module.exports = buildSchema(`
+export default buildSchema(`
   type Lesson {
     id: ID!
     courseId: String!
