@@ -9,6 +9,7 @@ const courses: ICourse[] = [
     level: "BEGINNER",
     published: true,
     lessons: lessons.filter((lesson: ILesson) => lesson.courseId === "1"),
+    lessonCount: lessons.filter((lesson: ILesson) => lesson.courseId === "1").length
   },
   {
     id: "2",
@@ -17,6 +18,7 @@ const courses: ICourse[] = [
     level: "INTERMEDIATE",
     published: true,
     lessons: lessons.filter((lesson: ILesson) => lesson.courseId === "2"),
+    lessonCount: lessons.filter((lesson: ILesson) => lesson.courseId === "2").length
   },
   {
     id: "3",
@@ -25,6 +27,7 @@ const courses: ICourse[] = [
     level: "ADVANCED",
     published: false,
     lessons: lessons.filter((lesson: ILesson) => lesson.courseId === "3"),
+    lessonCount: lessons.filter((lesson: ILesson) => lesson.courseId === "3").length
   },
 ];
 
