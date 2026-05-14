@@ -7,15 +7,43 @@ export default {
     return "Hello Shivam Mishra!";
   },
 
-  course: ({id}: {id: string}) => {
+  course: ({ id }: { id: string }) => {
     return courses.find(course => course.id == id);
   },
 
-  courses: () => { 
-   return courses;
+  courses: ({
+    level,
+    published,
+    search
+  }: {
+    level?: string;
+    published?: boolean;
+    search?: string;
+  }) => {
+    let result = courses;
+
+    if (level) {
+      result = result.filter(course => course.level === level);
+    }
+
+    if (published !== undefined) {
+      result = result.filter(
+        course => course.published === published
+      );
+    }
+
+    if (search) {
+      result = result.filter(course =>
+        course.title
+          .toLowerCase()
+          .includes(search.toLowerCase())
+      );
+    }
+
+    return result;
   },
 
-  lesson: ({id}: {id: string}) => {
+  lesson: ({ id }: { id: string }) => {
     return lessons.find(lesson => lesson.id == id);
   },
 
@@ -23,7 +51,7 @@ export default {
     return lessons;
   },
 
-   createCourse: ({ input }: { input: ICreateCourseInput }) => {
+  createCourse: ({ input }: { input: ICreateCourseInput }) => {
     const newCourse = {
       id: String(courses.length + 1),
       ...input,
@@ -37,7 +65,7 @@ export default {
     return newCourse;
   },
 
-  addLesson: ({ input } : { input: IAddLessonInput }) => {
+  addLesson: ({ input }: { input: IAddLessonInput }) => {
     const course = courses.find((c) => c.id === input.courseId);
 
     if (!course) {
@@ -58,7 +86,7 @@ export default {
     return newLesson;
   },
 
-  markLessonCompleted: ({ id }: {id : string}) => {
+  markLessonCompleted: ({ id }: { id: string }) => {
     const lesson = lessons.find((l) => l.id === id);
 
     if (!lesson) {
@@ -70,7 +98,7 @@ export default {
     return lesson;
   },
 
-  publishCourse: ({ id, published } : { id: string, published: boolean}) => {
+  publishCourse: ({ id, published }: { id: string, published: boolean }) => {
     const course = courses.find((c) => c.id === id);
 
     if (!course) {
