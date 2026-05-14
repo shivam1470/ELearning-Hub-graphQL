@@ -1,5 +1,5 @@
 # Test Query
 
 query {
-  hello
+  user
 }
