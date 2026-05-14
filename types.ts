@@ -10,6 +10,7 @@ export interface ICourse {
   level: TCourseLevel;
   published: boolean;
   lessons: ILesson[];
+  lessonCount: number
 }
 
 export interface ILesson {

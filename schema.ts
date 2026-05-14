@@ -15,6 +15,8 @@ export default buildSchema(`
     description: String!
     level: String!
     published: Boolean!
+    lessons: [Lesson!]!
+    lessonCount: Int!
   }
 
   type Query {
