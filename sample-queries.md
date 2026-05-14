@@ -170,6 +170,22 @@ mutation {
 
 ---
 
+## 11. Search & Filter query
+
+```graphql
+query {
+  courses(
+    level: "BEGINNER"
+    published: true
+    search: "graphql"
+  ) {
+    title
+  }
+}
+```
+
+---
+
 # Practice Flow
 
 Run in this order:

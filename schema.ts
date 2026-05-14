@@ -34,7 +34,11 @@ export default buildSchema(`
   type Query {
     hello: String
     course(id: ID!): Course
-    courses: [Course]
+    courses(
+      level: String
+      published: Boolean
+      search: String
+    ): [Course!]!
     lesson(id: ID!): Lesson
     lessons: [Lesson]
   }
