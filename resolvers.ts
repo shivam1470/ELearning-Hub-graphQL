@@ -52,6 +52,12 @@ export default {
   },
 
   createCourse: ({ input }: { input: ICreateCourseInput }) => {
+    const { title, description, level } = input
+
+
+    if (title || description || level) {
+      throw new Error("Please provide title, descrption and level to create course.");
+    }
     const newCourse = {
       id: String(courses.length + 1),
       ...input,
@@ -66,7 +72,20 @@ export default {
   },
 
   addLesson: ({ input }: { input: IAddLessonInput }) => {
-    const course = courses.find((c) => c.id === input.courseId);
+
+    if (!input.title.trim()) {
+      throw new Error("Lesson title cannot be empty");
+    }
+
+    if (input.durationMinutes <= 0) {
+      throw new Error(
+        "Lesson duration must be greater than 0"
+      );
+    }
+
+    const course = courses.find(
+      c => c.id === input.courseId
+    );
 
     if (!course) {
       throw new Error("Course not found");
